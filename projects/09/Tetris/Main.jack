@@ -1,0 +1,11 @@
+/** start a game of tetris */
+
+class Main {
+    function void main() {
+        var TetrisGame game;
+        let game = TetrisGame.new();
+        do game.run();
+        do game.dispose();
+        return;
+    }
+}

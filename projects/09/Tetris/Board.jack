@@ -1,0 +1,56 @@
+class Board {
+
+    field int x, y;
+    field int size;
+    field Array surface;
+
+    constructor Board new() {
+        let x = 0;
+        let y = 0;
+        let size = 100;
+        let surface = Array.new(size);
+        do init_surface();
+        do draw();
+        return this;
+    }
+
+    method void init_surface() {
+        var int i;
+        let i = 0;
+        while (i < size) {
+            let surface[i] = (2*size) - 5;
+            let i = i + 1;
+        }
+        return;
+    }
+
+    method int get_surface(int ind) {
+        return surface[ind];
+    }
+
+    method void update_surface(int ind) {
+        let surface[ind] = surface[ind] - 5;
+        return;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void draw() {
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x, y, x + 5, y + (2*size) - 1);
+        do Screen.drawRectangle(x + size, y, x + size + 5, y + (2*size) - 1);
+        do Screen.drawRectangle(x, y + (2*size), x + size + 5, y + (2*size) + 5);
+        return;
+    }
+
+    method void erase() {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x, y, x + 5, y + (2*size) - 1);
+        do Screen.drawRectangle(x + size, y, x + size + 5, y + (2*size) - 1);
+        do Screen.drawRectangle(x, y + (2*size), x + size + 5, y + (2*size) + 5);
+        return;
+    }
+}

@@ -1,0 +1,61 @@
+class Piece {
+    field int x, y, shape;
+
+    constructor Piece new() {
+        let x = 45;
+        let y = 0;
+        do select_shape();
+        do draw();
+        return this;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method int get_y() {
+        return y;
+    }
+
+    method int get_x() {
+        return x;
+    }
+
+    method void select_shape() {
+        var Array shapes;
+        let shapes = Array.new(5);
+        let shapes[0] = 1;
+        let shape = shapes[0];
+        return;
+    }
+
+    method void move(int dir) {
+        var int next;
+        let next = x + (5*dir);
+        do erase();
+        let y = y + 1;
+        if ((next > 5) & (next < 100)) {
+            let x = next;
+        }
+        do draw();
+        return;
+    }
+
+    method void rotate() {
+        // math stuff
+        return;
+    }
+
+    method void erase() {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x, y, x + 5, y + 5);
+        return;
+    }
+
+    method void draw() {
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x, y, x + 5, y + 5);
+        return;
+    }
+}

@@ -1,0 +1,86 @@
+/**
+ * Implements the Tetris game
+ * Tiles of 5 various shapes will fall from the top of the screen.
+ * The player must use the left and right arrow keys to move the tile,
+ * up arrow to rotate it. The goal is to stack the tiles as efficiently as
+ * possible. The game ends when a stacked tile doesn't fit under the top
+ * of the screen.
+ */
+
+class TetrisGame {
+    field Board board;
+    field Piece falling;
+    field int direction;
+
+    constructor TetrisGame new() {
+        // draws the board on the screen
+        let board = Board.new();
+        let direction = 0;
+        do make_piece();
+        return this;
+    }
+
+    method void dispose() {
+        do board.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void make_piece() {
+        /** generates pieces to fall from top */
+        let falling = Piece.new();
+        return;
+    }
+
+    method void move_piece() {
+        if (direction = 0) { do falling.move(0); }
+        if (direction = -1) { do falling.move(-1); }
+        if (direction = 1) { do falling.move(1); }
+        if (direction = 3) {
+            do falling.rotate();
+            do falling.move(0);
+        }
+        return;
+    }
+
+    method void piece_fall() {
+        var int py;
+        var int px;
+        let py = falling.get_y();
+        let px = falling.get_x();
+        if (py < board.get_surface(px)) {
+            do move_piece();
+        }
+        else {
+            do board.update_surface(px);
+            do make_piece();
+        }
+        do Sys.wait(150);
+        return;
+    }
+
+    method void run() {
+        var char key;
+        var boolean exit;
+        let exit = false;
+        do Sys.wait(500);
+
+        while (~exit) {
+            while (key = 0) {
+                let key = Keyboard.keyPressed();
+                let direction = 0;
+                do piece_fall();
+            }
+            if (key = 81) { let exit = true; }
+            if (key = 130) { let direction = -1; }
+            if (key = 132) { let direction = 1; }
+            if (key = 131) { let direction = 3; }
+
+            while (~(key = 0)) {
+                let key = Keyboard.keyPressed();
+                do piece_fall();
+            }
+        }
+        return;
+    }
+}
