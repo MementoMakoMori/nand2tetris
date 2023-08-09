@@ -1,0 +1,41 @@
+class Test {
+    field int x, y, mem, loc;
+    field Piece cube;
+
+    constructor Test new() {
+        let x = 256;
+        let y = 5;
+        let mem = 16560;
+        let loc = 176;
+        let cube = Piece.new(x, y);
+        return this;
+    }
+
+    method void dispose() {
+        do cube.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void run() {
+        do Output.moveCursor(0, 0);
+        do Output.printString("Test 1");
+        do cube.draw1();
+        do Sys.wait(3000);
+        do cube.erase1();
+        do Sys.wait(3000);
+        do Output.moveCursor(0, 0);
+        do Output.printString("Test 2");
+        do cube.draw2(loc);
+        do Sys.wait(3000);
+        do cube.erase2(loc);
+        do Sys.wait(3000);
+        do Output.moveCursor(0, 0);
+        do Output.printString("Test 3");
+        do cube.draw3(mem);
+        do Sys.wait(3000);
+        do cube.erase3(mem);
+        do Sys.wait(5000);
+        return;
+    }
+}

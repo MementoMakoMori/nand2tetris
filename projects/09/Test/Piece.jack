@@ -1,0 +1,70 @@
+class Piece {
+    field int x, y, shape;
+
+    constructor Piece new(int xin, int yin) {
+        let x = xin;
+        let y = yin;
+        return this;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void erase1() {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x, y, x + 5, y + 5);
+        return;
+    }
+
+    method void draw1() {
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x, y, x + 5, y + 5);
+        return;
+    }
+
+    method void draw2(int location) {
+        var int memAddress;
+        let memAddress = 16384+location;
+        do Memory.poke(memAddress+0, 31);
+        do Memory.poke(memAddress+32, 31);
+        do Memory.poke(memAddress+64, 31);
+        do Memory.poke(memAddress+96, 31);
+        do Memory.poke(memAddress+128, 31);
+        return;
+    }
+
+    method void erase2(int location) {
+        var int memAddress;
+        let memAddress = 16384+location;
+        do Memory.poke(memAddress+0, 0);
+        do Memory.poke(memAddress+32, 0);
+        do Memory.poke(memAddress+64, 0);
+        do Memory.poke(memAddress+96, 0);
+        do Memory.poke(memAddress+128, 0);
+        return;
+    }
+
+    method void draw3(int memory) {
+        var int memAddress;
+        let memAddress = memory;
+        do Memory.poke(memAddress+0, 31);
+        do Memory.poke(memAddress+32, 31);
+        do Memory.poke(memAddress+64, 31);
+        do Memory.poke(memAddress+96, 31);
+        do Memory.poke(memAddress+128, 31);
+        return;
+    }
+
+    method void erase3(int memory) {
+        var int memAddress;
+        let memAddress = memory;
+        do Memory.poke(memAddress+0, 0);
+        do Memory.poke(memAddress+32, 0);
+        do Memory.poke(memAddress+64, 0);
+        do Memory.poke(memAddress+96, 0);
+        do Memory.poke(memAddress+128, 0);
+        return;
+    }
+}

@@ -1,0 +1,16 @@
+class Main {
+    function void main() {
+        var Test t1;
+        var Extra e1;
+        let t1 = Test.new();
+        do t1.run();
+        do t1.dispose();
+        do Screen.clearScreen();
+        let e1 = Extra.new();
+        do e1.run();
+        do Screen.clearScreen();
+        do e1.run2();
+        do Sys.wait(10000);
+        return;
+    }
+}

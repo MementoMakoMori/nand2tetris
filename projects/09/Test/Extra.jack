@@ -1,0 +1,99 @@
+class Extra {
+
+    constructor Extra new() {
+        return this;
+    }
+
+    method void run() {
+        var int v;
+        let v = remain(32, 16);
+        do Output.moveCursor(0, 0);
+        do Output.printString("Remain 32/16: ");
+        do Output.printInt(v);
+        do Output.println();
+        do Sys.wait(2000);
+        let v = remain(24, 16);
+        do Output.printString("Remain 24/16: ");
+        do Output.printInt(v);
+        do Output.println();
+        do Sys.wait(2000);
+        let v = exp(2, 0);
+        do Output.printString("Exp 2^0: ");
+        do Output.printInt(v);
+        do Output.println();
+        do Sys.wait(2000);
+        let v = exp(2, 1);
+        do Output.printString("Exp 2^1: ");
+        do Output.printInt(v);
+        do Output.println();
+        do Sys.wait(2000);
+        let v = exp(2, 5);
+        do Output.printString("Exp 2^5: ");
+        do Output.printInt(v);
+        do Output.println();
+        do Sys.wait(3000);
+        return;
+    }
+
+    method int remain(int num, int div) {
+        var int count;
+        var int total;
+        if (div > num) {
+            do Sys.error(10);
+        }
+        let count = 0;
+        let total = 0;
+        while (((total + div) < num) | ((total+div) = num)) {
+            let total = total + div;
+        }
+        while (total < num) {
+            let total = total + 1;
+            let count = count + 1;
+        }
+        return count;
+    }
+
+    method int exp(int num, int ex) {
+        var int count;
+        var int total;
+        let count = 1;
+        if (ex = 0) {
+            return count;
+        }
+        let total = num;
+        while (count < ex) {
+            let total = total * num;
+            let count = count + 1;
+        }
+        return total;
+    }
+
+    method void run2() {
+        var int loc;
+        var int i;
+        var boolean pix;
+        let i = 0;
+        do Screen.setColor(true);
+        do Screen.drawRectangle(256, 0, 263, 15);
+        let loc = 16384 + (256/16);
+        do Output.moveCursor(0, 0);
+        while (i < 16) {
+            if (i = 15) {
+                let pix = (Memory.peek(loc) & -1);
+            }
+            else {
+                let pix = (Memory.peek(loc) & exp(2,i));
+            }
+            do Output.printString("Mem");
+            do Output.printInt(i);
+            do Output.printString(": ");
+            do Output.printInt(pix);
+            do Output.println();
+            let i = i + 1;
+        }
+        if (pix) {
+            do Output.printString("It works!");
+        }
+        return;
+    }
+}
