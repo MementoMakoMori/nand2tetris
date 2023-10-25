@@ -39,4 +39,4 @@ class VMWriter:
         self.output.close()
 
     def comment(self, text: str):
-        self.output.write(text+"\n")
+        self.output.write("// " + text + "\n")

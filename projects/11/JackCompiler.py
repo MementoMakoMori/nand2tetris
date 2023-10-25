@@ -477,7 +477,14 @@ class CompilationEngine:
             self.writer.writePush('constant', int(self.tok['value']))
             self.nextToken()
         elif self.tok['type'] == 'stringConstant':
-            pass
+            self.writer.comment(f"encountered string constant: {self.tok['value']}")
+            self.writer.writePush('constant', len(self.tok['value']))
+            self.writer.writeCall("String.new", 1)
+            for char in self.tok['value']:
+                self.writer.writePush('constant', ord(char))
+                self.writer.writeCall('String.appendChar', 2)
+            self.writer.comment("end string code")
+            self.nextToken()
         elif self.tok['value'] in self.check['kws']:
             match self.tok['value']:
                 case 'true':
@@ -494,11 +501,15 @@ class CompilationEngine:
             id = self.tok['value']
             self.nextToken()
             if self.tok['value'] == '[':
+                self.writer.comment(f"this array is named {id}")
                 # self.writeTok()
                 self.writer.writePush(self.ids.kindOf(id), self.ids.indexOf(id))
                 self.nextToken()
                 self.compileExpression()
                 self.checkTok(check_val=']')
+                self.writer.writeArithmetic('+')
+                self.writer.writePop('pointer', 1)
+                self.writer.writePush('that', 0)
 
             elif self.tok['value'] in {".", "("}:
                 # self.writeTok()
@@ -520,7 +531,6 @@ class CompilationEngine:
                 break
             # self.writeTok()
             self.nextToken()  # continue the loop to compile the next expression
-
 
         return nargs
 
