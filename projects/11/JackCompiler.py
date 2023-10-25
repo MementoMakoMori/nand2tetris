@@ -477,13 +477,11 @@ class CompilationEngine:
             self.writer.writePush('constant', int(self.tok['value']))
             self.nextToken()
         elif self.tok['type'] == 'stringConstant':
-            self.writer.comment(f"encountered string constant: {self.tok['value']}")
             self.writer.writePush('constant', len(self.tok['value']))
             self.writer.writeCall("String.new", 1)
             for char in self.tok['value']:
                 self.writer.writePush('constant', ord(char))
                 self.writer.writeCall('String.appendChar', 2)
-            self.writer.comment("end string code")
             self.nextToken()
         elif self.tok['value'] in self.check['kws']:
             match self.tok['value']:
@@ -501,7 +499,6 @@ class CompilationEngine:
             id = self.tok['value']
             self.nextToken()
             if self.tok['value'] == '[':
-                self.writer.comment(f"this array is named {id}")
                 # self.writeTok()
                 self.writer.writePush(self.ids.kindOf(id), self.ids.indexOf(id))
                 self.nextToken()
