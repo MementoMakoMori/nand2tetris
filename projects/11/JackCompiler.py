@@ -341,15 +341,19 @@ class CompilationEngine:
         self.nextToken()
         if self.tok['value'] == '[':
             # self.writeTok()
+            self.writer.comment(f"the following array is on the left of 'let' statement: {assign}")
             self.writer.writePush(self.ids.kindOf(assign), self.ids.indexOf(assign))
             self.nextToken()
             self.compileExpression()
             self.checkTok(check_val=']')
             self.writer.writeArithmetic('add')
-            self.writer.writePop('pointer', 1)
+            # self.writer.writePop('pointer', 1)
             self.checkTok(check_val='=')
             self.compileExpression()
             self.checkTok(check_val=';')
+            self.writer.writePop('temp', 0)
+            self.writer.writePop('pointer', 1)
+            self.writer.writePush('temp', 0)
             self.writer.writePop('that', 0)
         else:
             self.checkTok(check_val='=')
@@ -500,6 +504,7 @@ class CompilationEngine:
             self.nextToken()
             if self.tok['value'] == '[':
                 # self.writeTok()
+                self.writer.comment(f"the following array is a compiled term: {id}")
                 self.writer.writePush(self.ids.kindOf(id), self.ids.indexOf(id))
                 self.nextToken()
                 self.compileExpression()
