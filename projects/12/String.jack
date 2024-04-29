@@ -11,54 +11,107 @@
  * string-oriented operations.
  */
 class String {
+    field int point, len, maxLen, count;
 
     /** constructs a new empty string with a maximum length of maxLength
      *  and initial length of 0. */
     constructor String new(int maxLength) {
+        let len = 0;
+        let maxLen = maxLength;
+        if (maxLength < 1) { let point = Array.new(1); }
+        else { let point =  Array.new(maxLength); }
+        return this;
     }
 
     /** Disposes this string. */
     method void dispose() {
+        do Memory.deAlloc(this);
+        return;
     }
 
     /** Returns the current length of this string. */
     method int length() {
+        return len;
     }
 
     /** Returns the character at the j-th location of this string. */
     method char charAt(int j) {
+        if (j > maxLen) { do Sys.error(15); }
+        return point[j];
     }
 
     /** Sets the character at the j-th location of this string to c. */
     method void setCharAt(int j, char c) {
+        if (j > maxLen) { do Sys.error(16); }
+        let point[j] = c;
+        return;
     }
 
     /** Appends c to this string's end and returns this string. */
     method String appendChar(char c) {
+        if (len > maxLen) { do Sys.error(17); }
+        else {
+            let point[len] = c;
+            let len = len + 1;
+        }
+        return this;
     }
 
     /** Erases the last character from this string. */
     method void eraseLastChar() {
+        if (len = 0) { do Sys.error(18); }
+        let len = len - 1;
+        return;
     }
 
     /** Returns the integer value of this string, 
      *  until a non-digit character is detected. */
     method int intValue() {
+        var int v, i;
+        var bool neg;
+        if (point[0] = 45) {
+            let neg = true;
+            let i = 1;
+        }
+        else { let neg = false; }
+        while ((i < len) & (point[i] > 47) & (point[i] < 58)) {
+            let v = (v*10) + (point[i] - 48);
+            let i = i + 1;
+        }
+        if (neg) { return -v; }
+        return v;
     }
 
     /** Sets this string to hold a representation of the given value. */
     method void setInt(int val) {
+        var int digit;
+        let count = count + 1;
+        if (count > maxLen) { do Sys.error(19); }
+        if (val = 0) {
+            let len = 0;
+            let count = 0;
+            return;
+        }
+        do setInt(val/10);
+        let digit = Math.abs(val);
+        if ((digit < 10) & (val < 0)) { do appendChar(45); }
+        let digit = digit - (10*(digit/10));
+        do appendChar(digit + 48);
+        return;
     }
 
     /** Returns the new line character. */
-    function char newLine() {
+    function char newLine() {       // ASCII 128
+        return 128;
     }
 
     /** Returns the backspace character. */
-    function char backSpace() {
+    function char backSpace() {     // ASCII 129
+        return 129;
     }
 
     /** Returns the double quote (") character. */
-    function char doubleQuote() {
+    function char doubleQuote() {   // ASCII 34
+        return 34;
     }
 }

@@ -11,10 +11,13 @@ class Math {
 
     /** Initializes the library. */
     function void init() {
+        return;
     }
 
     /** Returns the absolute value of x. */
     function int abs(int x) {
+        if (x < 0) {return -x;}
+        return x;
     }
 
     /** Returns the product of x and y. 
@@ -23,6 +26,20 @@ class Math {
      *  the Jack expressions x*y and multiply(x,y) return the same value.
      */
     function int multiply(int x, int y) {
+        var int sum, shiftX, bit, count;
+        let sum = 0;
+        let shiftX = x;
+        let bit = 1;
+        let count = 1;
+        while (count < 17) {
+            if (y & bit) {
+                let sum = sum + shiftX;
+            }
+            let shiftX = shiftX + shiftX;
+            let bit = bit + bit;
+            let count = count + 1;
+        }
+        return sum;
     }
 
     /** Returns the integer part of x/y.
@@ -31,17 +48,44 @@ class Math {
      *  the Jack expressions x/y and divide(x,y) return the same value.
      */
     function int divide(int x, int y) {
+       var int q, result;
+       var bool neg;
+       if (~(x < 0) & ~(y < 0)) {let neg = false;}
+       else { let neg = true;}
+       let x = Math.abs(x);
+       let y = Math.abs(y);
+       if (y > x) {return 0;}
+       let q = Math.divide(x, 2*y);
+       if (x - (2*q*y) < y) {let result = 2*q;}
+       else {let result = (2*q) + 1;}
+       if (neg) {return -result;}
+       return result;
     }
 
     /** Returns the integer part of the square root of x. */
     function int sqrt(int x) {
+        var int y, two, test;
+        let y = 0;
+        let two = 128;
+        while (two > 0) {
+            let test = (y+two)*(y+two);
+            if (((test < x) | (test = x)) & (test > 0)) {
+                let y = y + two;
+            }
+            let two = two/2;
+        }
+        return y;
     }
 
     /** Returns the greater number. */
     function int max(int a, int b) {
+        if (a > b) {return a;}
+        return b;
     }
 
     /** Returns the smaller number. */
     function int min(int a, int b) {
+        if (a < b) {return a;}
+        return b;
     }
 }

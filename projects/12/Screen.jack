@@ -10,34 +10,146 @@
  * the screen is indexed (0,0).
  */
 class Screen {
+    static bool color;
+    static int mem;
+    static Array bits;
 
     /** Initializes the Screen. */
     function void init() {
+        var int x;
+        let color = true;
+        let bits = Array.new(17);
+        let bits[0] = 1;
+        while (x < 16) {
+            let x = x + 1;
+            let bits[x] = bits[x-1] + bits[x-1];
+        }
+        /** let bits[0] = 1;
+        let bits[1] = 2;
+        let bits[2] = 4;
+        let bits[3] = 8;
+        let bits[4] = 16;
+        let bits[5] = 32;
+        let bits[6] = 64;
+        let bits[7] = 128;
+        let bits[8] = 256;
+        let bits[9] = 512;
+        let bits[10] = 1024;
+        let bits[11] = 2048;
+        let bits[12] = 4096;
+        let bits[13] = 8192;
+        let bits[14] = 16384;
+        let bits[15] = ~(32767); */
+        return;
     }
 
     /** Erases the entire screen. */
     function void clearScreen() {
+        var int address;
+        let address = 0;
+        while ~(address > 8192) {
+            let mem[address] = 0;
+            let address = address + 1;
+        }
+        return;
     }
 
     /** Sets the current color, to be used for all subsequent drawXXX commands.
      *  Black is represented by true, white by false. */
     function void setColor(boolean b) {
+        let color = b;
+        return;
     }
 
     /** Draws the (x,y) pixel, using the current color. */
     function void drawPixel(int x, int y) {
+        var int address, value, bit;
+        let address = 16384 + (32*y) + (x/16);
+        let value = Memory.peek(address);
+        let bit = x - (16*(x/16));
+        if (color) { let value = value | bits[bit]; }
+        else {
+            if (value & bits[bit]) { let value = value - bits[bit]; }
+        }
+        do Memory.poke(address, value);
+        return;
     }
 
     /** Draws a line from pixel (x1,y1) to pixel (x2,y2), using the current color. */
     function void drawLine(int x1, int y1, int x2, int y2) {
+        var int diff, dx, dy, xinc, yinc;
+        let dx = x2-x1;
+        let dy = y2-y1;
+        let diff = 0;
+        if ((dx = 0) | (dy = 0)) {
+            do Screen.drawStraightLine(x1, y1, x2, y2, dx, dy);
+            return;
+        }
+        if (dx > 0) { let xinc = 1; }
+        else { let xinc = -1; }
+        if (dy > 0) { let yinc = 1; }
+        else { let yinc = -1; }
+
+        while (~((x1 = x2) & (y1 = y2))) {
+            do Screen.drawPixel(x1, y1);
+            if (diff < 0) {
+                let x1 = x1 + xinc;
+                let diff = diff + Math.abs(dy);
+            }
+            else {
+                let y1 = y1 + yinc;
+                let diff = diff - Math.abs(dx);
+            }
+        }
+        return;
     }
 
     /** Draws a filled rectangle whose top left corner is (x1, y1)
      * and bottom right corner is (x2,y2), using the current color. */
     function void drawRectangle(int x1, int y1, int x2, int y2) {
+        var int dx;
+        while (~(y1 > y2)) {
+            let dx = x1;
+            while (~(dx > x2)) {
+                do Screen.drawPixel(dx, y1);
+                let dx = dx + 1;
+            }
+            let y1 = y1 + 1;
+        }
+        return;
     }
 
     /** Draws a filled circle of radius r<=181 around (x,y), using the current color. */
     function void drawCircle(int x, int y, int r) {
+        var int dy, x1, x2;
+        var int xinc;
+        let dy = -r;
+        while (dy < (r + 1)) {
+            let xinc = Math.sqrt((r*r)-(dy*dy));
+            if (xinc = 0) { do Screen.drawPixel(x, y+dy); }
+            else { do Screen.drawStraightLine(x-xinc, y+dy, x+xinc, y+dy, 2*xinc, 0); }
+            let dy = dy + 1;
+        }
+        return;
+    }
+
+
+    /** Special case for drawing a straight line, added by Becca :) */
+    function void drawStraightLine(int x1, int y1, int x2, int y2, int dx, int dy) {
+        var int inc;
+        if ((dx < 0) | (dy < 0)) { let inc = -1;}
+        else { let inc = 1;}
+        if (dx = 0) {
+            while (~(y1 = (y2 + inc))) {
+                do Screen.drawPixel(x1, y1);
+                let y1 = y1 + inc;
+            }
+            return;
+        }
+        while (~(x1 = (x2 + inc))) {
+            do Screen.drawPixel(x1, y1);
+            let x1 = x1 + inc;
+        }
+        return;
     }
 }
